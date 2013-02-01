@@ -1,0 +1,4 @@
+collectiveSpace
+===============
+
+OpenFrameworks + OpenCV experiment
