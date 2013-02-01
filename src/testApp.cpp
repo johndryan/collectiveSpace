@@ -4,8 +4,8 @@
 void testApp::setup(){
     ofBackground(0,0,0);
 
-    w = 640;
-    h = 480;
+    w = 800;
+    h = 600;
 
     movie.initGrabber(w, h, true);
 
@@ -17,12 +17,15 @@ void testApp::setup(){
     diffImg.allocate(w, h);
     maskedOutput.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
     maskedSave.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
+    maskedSave2.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
     maskedGrab.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
     pixels.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
     
     alphaPixels = new unsigned char[w*h];
     colorPixels = new unsigned char[w*h*3];
     savedPixels = new unsigned char[w*h*4];
+    savedPixels2 = new unsigned char[w*h*4];
+    
     
 //    bufferCount = 0;
 //    bufferSize = BUFFERSIZE;
@@ -75,16 +78,17 @@ void testApp::update(){
         }
         
         savedPixels = maskedSave.getPixels();
+        savedPixels2 = maskedSave2.getPixels();
         for (int i = 0; i < w; i++){
             for (int j = 0; j < h; j++){
                 int pos = (j * w + i);
-                pixels[pos*4  ] = (savedPixels[pos * 4] + colorPixels[pos * 3])/2;
-                pixels[pos*4+1] = (savedPixels[pos * 4+1] + colorPixels[pos * 3+1])/2;
-                pixels[pos*4+2] = (savedPixels[pos * 4+2] + colorPixels[pos * 3+2])/2;
-                if (savedPixels[pos*4+3] > alphaPixels[pos]) {
+                pixels[pos*4  ] = (savedPixels[pos * 4] + savedPixels[pos * 4] + colorPixels[pos * 3])/3;
+                pixels[pos*4+1] = (savedPixels[pos * 4+1] + savedPixels[pos * 4+1] + colorPixels[pos * 3+1])/3;
+                pixels[pos*4+2] = (savedPixels[pos * 4+2] + savedPixels[pos * 4+2] + colorPixels[pos * 3+2])/3;
+                if ((savedPixels[pos*4+3]+savedPixels2[pos*4+3])/2 > alphaPixels[pos]) {
                     pixels[pos*4+3] = alphaPixels[pos];
                 } else {
-                    pixels[pos*4+3] = savedPixels[pos*4+3];
+                    pixels[pos*4+3] = (savedPixels[pos*4+3]+savedPixels2[pos*4+3])/2;
                 }
             }
         }
@@ -100,13 +104,14 @@ void testApp::draw(){
     ofSetColor(255,255,255);
     
     //draw all cv images
-    bgImg.draw(0,0);
-    sourceImg.draw(0,h,w/3,h/3);
-    diffImg.draw(w/3, h,w/3,h/3);
+    bgImg.draw(112+0,0);
+    sourceImg.draw(112+0,h,w/4,h/4);
+    diffImg.draw(112+w/4, h,w/4,h/4);
     
     ofEnableAlphaBlending();
-    maskedOutput.draw(0, 0);
-    maskedSave.draw(w*2/3, h,w/3,h/3);
+    maskedOutput.draw(112+0, 0);
+    maskedSave.draw(112+w*2/4, h,w/4,h/4);
+    maskedSave2.draw(112+w*3/4, h,w/4,h/4);
     //imgBuffer[bufferCount]->draw(w*2/3, h,w/3,h/3);
     ofDisableAlphaBlending();
 }
@@ -115,6 +120,8 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
     if (key == 'r'){
         maskedSave.clone(maskedGrab);
+    } else if (key == 't'){
+        maskedSave2.clone(maskedGrab);
     } else if (key == ' '){
         bgImg = sourceImg;
         bgImgGray = bgImg;
