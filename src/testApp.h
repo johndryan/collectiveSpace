@@ -27,6 +27,9 @@ class testApp : public ofBaseApp{
         ofPixels pixels;
         ofImage maskedOutput;
     
+        unsigned char * colorPixels;
+        unsigned char * alphaPixels;
+    
         int w,h;
 		
 };

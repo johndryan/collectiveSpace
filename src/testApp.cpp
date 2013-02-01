@@ -17,6 +17,9 @@ void testApp::setup(){
     diffImg.allocate(w, h);
     maskedOutput.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
     pixels.allocate(w, h, OF_IMAGE_COLOR_ALPHA);
+    
+    alphaPixels = new unsigned char[w*h];
+    colorPixels = new unsigned char[w*h*4];
 }
 
 //--------------------------------------------------------------
@@ -31,9 +34,7 @@ void testApp::update(){
         diffImg.absDiff(bgImgGray,sourceImgGray);
         diffImg.threshold(30, false);
         diffImg.blur(2);
-
-        unsigned char * colorPixels;
-        unsigned char * alphaPixels;
+        
         alphaPixels = diffImg.getPixels();
         colorPixels = movie.getPixels();
         for (int i = 0; i < w; i++){
