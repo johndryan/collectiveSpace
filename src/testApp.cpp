@@ -78,9 +78,9 @@ void testApp::update(){
         for (int i = 0; i < w; i++){
             for (int j = 0; j < h; j++){
                 int pos = (j * w + i);
-                pixels[pos*4  ] = savedPixels[pos * 4];
-                pixels[pos*4+1] = savedPixels[pos * 4+1];
-                pixels[pos*4+2] = savedPixels[pos * 4+2];
+                pixels[pos*4  ] = (savedPixels[pos * 4] + colorPixels[pos * 3])/2;
+                pixels[pos*4+1] = (savedPixels[pos * 4+1] + colorPixels[pos * 3+1])/2;
+                pixels[pos*4+2] = (savedPixels[pos * 4+2] + colorPixels[pos * 3+2])/2;
                 if (savedPixels[pos*4+3] > alphaPixels[pos]) {
                     pixels[pos*4+3] = alphaPixels[pos];
                 } else {
