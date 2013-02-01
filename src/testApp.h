@@ -25,11 +25,13 @@ class testApp : public ofBaseApp{
         ofxCvColorImage sourceImg,bgImg;
         ofxCvGrayscaleImage sourceImgGray,bgImgGray,diffImg;
         ofPixels pixels;
-        ofImage maskedOutput;
+        ofImage maskedOutput, maskedSave, maskedGrab;
     
         unsigned char * colorPixels;
         unsigned char * alphaPixels;
+        unsigned char * savedPixels;
     
-        int w,h;
-		
+//        ofImage** imgBuffer;
+    
+        int w,h,bufferSize,bufferCount,frameCount;
 };
